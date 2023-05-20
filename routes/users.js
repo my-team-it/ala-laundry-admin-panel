@@ -25,12 +25,16 @@ router.get("/id(\\d{1}|\\d{2})/", async function (req, res, next) {
   const json = await response.json();
   const machine = json.data;
   const trigger = machine.input.trigger;
+  const mode = machine.input.mode;
+  const admin_mode = machine.input.admin;
 
   res.render("machine", {
     id: "id" + req.params[0],
     listOfModes,
     placeholder,
     trigger,
+    mode,
+    admin_mode,
   });
 });
 
@@ -67,8 +71,10 @@ router.get("/id*/state", async function (req, res, next) {
   const json = await response.json();
   const machine = json.data;
   const trigger = machine.input.trigger;
+  const mode = machine.input.mode;
+  const admin_mode = machine.input.admin;
 
-  res.json(trigger);
+  res.json({ trigger, mode, admin_mode });
 });
 
 module.exports = router;

@@ -1,34 +1,37 @@
 extends layout
 
 block content
-  h2= 'Machines ' + id 
-  h2(id="trigger")= 'Current state ' + (trigger ? 'on':'off')
-  h2(id="internet")= 'Internet connectivity ' + (trigger ? 'on':'off')
+  h2= 'Machine - ' + id 
   div(class="d-flex flex-row container")
+    div(class= "container justify-content-start m-0")
+      h3(id="trigger")= 'Current state - ' + (trigger ? 'on':'off')
+      h3(id="mode")= 'Current mode - ' + mode
+      h3(id="admin")= 'Current admin mode - ' + (admin_mode ? 'on':'off')
+      h3(id="internet")= 'Internet connectivity - ' + (trigger ? 'on':'off')
     div(class="d-flex flex-column container m-0")
-      - for (var i = 0, j = 'on'; i < listOfModes.length; i++)
-        div(class="card" style="width:40rem;")
-          div(class="card-body")
-            div(class="form-check")
-            case i 
-                when listOfModes.length - 1
-                  - j = 'off'
-                default
-                  - j = 'on'
-            input(class="form-check-input" type="radio" onclick="location.href = \"" + '/machines/' + id + '/' + j + '/mode/' + i + "\"")
-            label(class="form-check-label" for="flexRadioDefault1")= listOfModes[i]
-    div(class="container")
-      div(class="card" style="width:30rem;")
+      div(class="card")
         div(class="card-body")
-          input(class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault")
-          label(class="form-check-label" for="flexSwitchCheckDefault")=placeholder[1]
+          span(class="mx-2 mv-0.5")= placeholder[1]
+          a(class="btn btn-primary mx-2 my-0.5" href="/machines/" + id + '/admin/on' role="button") On
+          a(class="btn btn-primary mx-2 my-0.5" href="/machines/" + id + '/admin/off' role="button") Off
+      div(class="d-flex flex-wrap")
+        - for (var i = 0, j = 'on'; i < listOfModes.length; i++)
+          div(class="card flex-fill p-1")
+            div(class="card-body")
+              div(class="form-check")
+              case i 
+                  when listOfModes.length - 1
+                    - j = 'off'
+                  default
+                    - j = 'on'
+              input(class="form-check-input" type="radio" onclick="location.href = \"" + '/machines/' + id + '/' + j + '/mode/' + i + "\"")
+              label(class="form-check-label" for="flexRadioDefault1")= listOfModes[i].substring(0,listOfModes[i].indexOf('|'))
   script(src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous")
   script.
     var socket = io();
     
     socket.on('data', function(data) {
-      if (data)
-        document.getElementById("trigger").innerHTML = "Current state on";
-      else  
-        document.getElementById("trigger").innerHTML = "Current state off";
+      document.getElementById("trigger").innerHTML = "Current state - " + (data.trigger? 'on':'off');
+      document.getElementById("mode").innerHTML = "Current mode - " + data.mode;
+      document.getElementById("admin").innerHTML = "Current admin mode - " + (data.admin_mode? 'on':'off');
     });
