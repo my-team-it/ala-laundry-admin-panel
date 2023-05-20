@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h2= 'Machines ' + id 
+  div(class="d-flex flex-row container")
+    div(class="d-flex flex-column container m-0")
+      - for (var i = 0; i < listOfModes.length; i++)
+        div(class="card" style="width:40rem;")
+          div(class="card-body")
+            span(class="mx-2 mv-0.5")= listOfModes[i]
+            a(class="btn btn-primary mx-2 my-0.5" href="/machines/" + id + '/on/mode/' + i role="button") On
+            a(class="btn btn-primary mx-2 my-0.5" href="/machines/" + id + '/off/mode/' + i role="button") Off
+    div(class="container")
+      div(class="card" style="width:30rem;")
+        div(class="card-body")
+          span(class="mx-2 mv-0.5")= placeholder[1]
+          a(class="btn btn-primary mx-2 my-0.5" href="/machines/" + id + '/admin/on' role="button") On
+          a(class="btn btn-primary mx-2 my-0.5" href="/machines/" + id + '/admin/off' role="button") Off

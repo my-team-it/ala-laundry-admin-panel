@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h2 List of Machines
+  div(class=container style="display:flex")
+    - for(var i =0;i < ids.length;i++)
+      div(class="card m-3" style="width: 18rem;")
+        div(class="card-body")
+        h5(class="card-title")= 'Machine ' + ids[i]
+        a(href="/machines/" + ids[i] class="btn btn-primary")= 'Go to ' + ids[i]
