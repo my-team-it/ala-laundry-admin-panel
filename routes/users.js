@@ -14,11 +14,24 @@ const listOfModes = [
   '"Ысқылау" режимі|Режим "Ополаскивание"',
   '"Ағызу" режимі|Режим "Слив"',
   '"Барабанды тазалау" режимі|Режим "Очистка барабана"',
+  "Сөндіру|Выключить",
 ];
 
 /* GET users listing. */
-router.get("/id(\\d{1}|\\d{2})/", function (req, res, next) {
-  res.render("machine", { id: "id" + req.params[0], listOfModes, placeholder });
+router.get("/id(\\d{1}|\\d{2})/", async function (req, res, next) {
+  const response = await fetch(
+    "http://payments.ala-laundry.com/api/machine/id" + req.params[0]
+  );
+  const json = await response.json();
+  const machine = json.data;
+  const trigger = machine.input.trigger;
+
+  res.render("machine", {
+    id: "id" + req.params[0],
+    listOfModes,
+    placeholder,
+    trigger,
+  });
 });
 
 router.get("/id*/admin/o*/", async function (req, res, next) {
@@ -30,20 +43,10 @@ router.get("/id*/admin/o*/", async function (req, res, next) {
   );
   const json = await response.json();
   const machines = json.data;
-  console.log(machines);
   res.redirect("/machines/id" + req.params[0]);
 });
 
 router.get("/id*/o*/mode/*", async function (req, res, next) {
-  console.log(req.params);
-  console.log(
-    "http://payments.ala-laundry.com/api/machine/o" +
-      req.params[1] +
-      "/id" +
-      req.params[0] +
-      "?mode=" +
-      req.params[2]
-  );
   const response = await fetch(
     "http://payments.ala-laundry.com/api/machine/o" +
       req.params[1] +
@@ -54,8 +57,18 @@ router.get("/id*/o*/mode/*", async function (req, res, next) {
   );
   const json = await response.json();
   const machines = json.data;
-  console.log(machines);
   res.redirect("/machines/id" + req.params[0]);
+});
+
+router.get("/id*/state", async function (req, res, next) {
+  const response = await fetch(
+    "http://payments.ala-laundry.com/api/machine/id" + req.params[0]
+  );
+  const json = await response.json();
+  const machine = json.data;
+  const trigger = machine.input.trigger;
+
+  res.json(trigger);
 });
 
 module.exports = router;

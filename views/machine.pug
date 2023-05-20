@@ -2,17 +2,33 @@ extends layout
 
 block content
   h2= 'Machines ' + id 
+  h2(id="trigger")= 'Current state ' + (trigger ? 'on':'off')
+  h2(id="internet")= 'Internet connectivity ' + (trigger ? 'on':'off')
   div(class="d-flex flex-row container")
     div(class="d-flex flex-column container m-0")
-      - for (var i = 0; i < listOfModes.length; i++)
+      - for (var i = 0, j = 'on'; i < listOfModes.length; i++)
         div(class="card" style="width:40rem;")
           div(class="card-body")
-            span(class="mx-2 mv-0.5")= listOfModes[i]
-            a(class="btn btn-primary mx-2 my-0.5" href="/machines/" + id + '/on/mode/' + i role="button") On
-            a(class="btn btn-primary mx-2 my-0.5" href="/machines/" + id + '/off/mode/' + i role="button") Off
+            div(class="form-check")
+            case i 
+                when listOfModes.length - 1
+                  - j = 'off'
+                default
+                  - j = 'on'
+            input(class="form-check-input" type="radio" onclick="location.href = \"" + '/machines/' + id + '/' + j + '/mode/' + i + "\"")
+            label(class="form-check-label" for="flexRadioDefault1")= listOfModes[i]
     div(class="container")
       div(class="card" style="width:30rem;")
         div(class="card-body")
-          span(class="mx-2 mv-0.5")= placeholder[1]
-          a(class="btn btn-primary mx-2 my-0.5" href="/machines/" + id + '/admin/on' role="button") On
-          a(class="btn btn-primary mx-2 my-0.5" href="/machines/" + id + '/admin/off' role="button") Off
+          input(class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault")
+          label(class="form-check-label" for="flexSwitchCheckDefault")=placeholder[1]
+  script(src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous")
+  script.
+    var socket = io();
+    
+    socket.on('data', function(data) {
+      if (data)
+        document.getElementById("trigger").innerHTML = "Current state on";
+      else  
+        document.getElementById("trigger").innerHTML = "Current state off";
+    });
