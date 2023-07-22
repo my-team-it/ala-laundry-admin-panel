@@ -27,6 +27,7 @@ router.get("/id(\\d{1}|\\d{2})/", async function (req, res, next) {
   const trigger = machine.input.trigger;
   const mode = machine.input.mode;
   const admin_mode = machine.input.admin;
+  const door_status = machine.output.door_status;
 
   res.render("machine", {
     id: "id" + req.params[0],
@@ -35,6 +36,7 @@ router.get("/id(\\d{1}|\\d{2})/", async function (req, res, next) {
     trigger,
     mode,
     admin_mode,
+    door_status,
   });
 });
 
