@@ -9,7 +9,10 @@ router.get("/", async function (req, res, next) {
   const json = await response.json();
   const machines = json.data;
   const machine_ids = machines.map((machine) => machine.machine_id);
-  res.render("index", { title: "Ala-laundry Admin Panel", ids: machine_ids });
+  res.render("index", {
+    title: "Ala-laundry Admin Panel",
+    ids: machine_ids.sort(),
+  });
 });
 
 module.exports = router;
